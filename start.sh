@@ -1,4 +1,12 @@
 #!/bin/bash
-pip install -r requirements.txt
+
+# Step 1: Create virtual environment if it doesn't exist
+if [ ! -d "venv_agent_lab" ]; then
+  python -m venv venv_agent_lab
+fi
+
+# Step 2: Use venv's pip to install requirements (no need to activate)
+venv_agent_lab/bin/pip install -r requirements.txt
+
+# Step 3: Run Streamlit globally (outside the venv)
 streamlit run langchain.py
-chmod +x start.sh
