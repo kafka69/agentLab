@@ -2,12 +2,11 @@
 
 # Step 0: Ensure system dependencies are installed
 # Install gfortran (used for compiling scientific Python packages)
-sudo apt-get update
-sudo apt-get install -y gfortran
+sudo apt-get update && sudo apt-get install -y gfortran
 
 # Step 1: Create virtual environment if it doesn't exist
 if [ ! -d "venv_agent_lab" ]; then
-  python3.10 -m venv venv_agent_lab
+  python -m venv venv_agent_lab
 fi
 
 # Step 2: Use venv's pip to install requirements with pre-built wheels
