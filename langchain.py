@@ -11,6 +11,7 @@ import shutil
 # Constants
 DEFAULT_YAML = "experiment_configs/MATH_agentlab.yaml"
 RESEARCH_DIR_PATH = "MATH_research_dir"
+
 # Function to remove directory and its contents
 def remove_directory(path):
     if os.path.exists(path):
@@ -75,43 +76,48 @@ if st.sidebar.button("Load Config"):
         with open(yaml_location, 'r') as file:
             st.session_state.yaml_content = file.read()
 
-
 # Edit YAML configuration
 st.header("Edit Configuration")
 if st.session_state.config:
-    # Display editable YAML
-    edited_yaml = st.text_area(
-        "Edit YAML configuration",
-        st.session_state.yaml_content,
-        height=600
+    # Display only the research-topic field for editing
+    current_topic = st.session_state.config.get('research-topic', '')
+    edited_topic = st.text_area(
+        "Edit Research Topic",
+        current_topic,
+        height=300,
+        key="research_topic_editor"
     )
-
+    
     # Save button
     if st.button("Save Configuration"):
         try:
-            # Validate the YAML before saving
-            parsed_yaml = yaml.safe_load(edited_yaml)
-            save_config(yaml_location, parsed_yaml)
-            st.session_state.config = parsed_yaml
-            st.session_state.yaml_content = edited_yaml
-
+            # Only update the research-topic in the config
+            st.session_state.config['research-topic'] = edited_topic
+            save_config(yaml_location, st.session_state.config)
+            
+            # Update the displayed content
+            st.session_state.yaml_content = yaml.dump(st.session_state.config)
+            
             # Update environment variables when saving
-            if 'gemini-api-key' in parsed_yaml:
-                os.environ['GEMINI_API_KEY'] = parsed_yaml['gemini-api-key']
-            if 'api-key' in parsed_yaml:
-                os.environ['OPENAI_API_KEY'] = parsed_yaml['api-key']
-            if 'deepseek-api-key' in parsed_yaml:
-                os.environ['DEEPSEEK_API_KEY'] = parsed_yaml['deepseek-api-key']
-            if 'groq-api-key' in parsed_yaml:
-                os.environ['GROQ_API_KEY'] = parsed_yaml['groq-api-key']
-            if 'openrouter-api-key' in parsed_yaml:
-                os.environ['OPENROUTER_API_KEY'] = parsed_yaml['openrouter-api-key']
-        except yaml.YAMLError as e:
-            st.error(f"Invalid YAML: {e}")
+            if 'gemini-api-key' in st.session_state.config:
+                os.environ['GEMINI_API_KEY'] = st.session_state.config['gemini-api-key']
+            if 'api-key' in st.session_state.config:
+                os.environ['OPENAI_API_KEY'] = st.session_state.config['api-key']
+                print(f"OpenAI API Key set: {os.environ['OPENAI_API_KEY']}")
+            if 'deepseek-api-key' in st.session_state.config:
+                os.environ['DEEPSEEK_API_KEY'] = st.session_state.config['deepseek-api-key']
+            if 'groq-api-key' in st.session_state.config:
+                os.environ['GROQ_API_KEY'] = st.session_state.config['groq-api-key']
+            if 'openrouter-api-key' in st.session_state.config:
+                os.environ['OPENROUTER_API_KEY'] = st.session_state.config['openrouter-api-key']
+            
+            st.success("Research topic updated successfully!")
+        except Exception as e:
+            st.error(f"Error saving configuration: {e}")
 
 # Research paper generation section
 st.header("Generate Research Paper")
-research_topic = "Your goal is to write a comprehensive paper about Building Safe and Beneficial AI Agents based on chapter 4 of the research titled 'Advances and Challenges in Foundation Agents: From Brain-Inspired Intelligence to Evolutionary, Collaborative, and Safe Systems' (arXiv ID: 2504.01990). The paper should clearly explain the key advances, highlight the main challenges, and discuss future research directions in the field of foundation agents. Use clear language, structured sections, and include relevant examples or technical details to illustrate important points."
+
 # Only show generation form if config is loaded
 if st.session_state.config:
     config = st.session_state.config
@@ -145,11 +151,10 @@ if st.session_state.config:
                     paper_index=0  # You can modify this if you need multiple papers
                 )
             
-                print(research_topic)
                 os.environ['GEMINI_API_KEY'] = config.get('gemini-api-key','')
                 # Create lab instance with all YAML parameters
                 lab = LaboratoryWorkflow(
-                    research_topic = research_topic,
+                    research_topic = config.get('research-topic', ''),
                     notes=[{"phases": [k.replace("-", " ")], "note": v} 
                           for k, vs in config.get('task-notes', {}).items() 
                           for v in vs],
@@ -190,7 +195,6 @@ if st.session_state.config:
                 
             except Exception as e:
                 st.error(f"Error generating paper: {e}")
-                st.error(f"research_topic: {research_topic}")
                 st.session_state.paper_generated = False
 
     # Display results if paper was generated
@@ -208,19 +212,18 @@ if st.session_state.config:
         st.subheader("Experimental Results")
         st.write(lab.phd.exp_results)
         
-        # Add download button for the PDF if compiled
-        if config.get('compile-latex', False):
-            pdf_path = f"./{lab.lab_dir}/tex/temp.pdf"
-            if os.path.exists(pdf_path):
-                with open(pdf_path, "rb") as f:
-                    st.download_button(
-                        label="Download PDF",
-                        data=f,
-                        file_name="research_paper.pdf",
-                        mime="application/pdf"
-                    )
-            else:
-                st.warning("PDF compilation was enabled but file not found.")
+        # Add download button for the report.txt file
+        report_path = os.path.join(lab.lab_dir, "report.txt")
+        if os.path.exists(report_path):
+            with open(report_path, "rb") as f:
+                st.download_button(
+                    label="Download Report",
+                    data=f,
+                    file_name="research_report.txt",
+                    mime="text/plain"
+                )
+        else:
+            st.warning("Report file not found at expected location.")
 else:
     st.warning("Please load a configuration file first using the sidebar.")
 

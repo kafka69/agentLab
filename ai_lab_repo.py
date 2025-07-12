@@ -250,7 +250,7 @@ class LaboratoryWorkflow:
         from langchain_pinecone import PineconeVectorStore
         from pinecone import Pinecone, ServerlessSpec
         from langchain_openai import OpenAIEmbeddings
-
+        # pinecone
         pc = Pinecone(api_key="pcsk_5LkoDN_QB8yo9XFYW6cV1NJiMUKpcexqvYM2QNAE6C7qfzdXpuZLtAa47fYrrogLrEY9oT")
         index_name = "pinecone-rag"
         index = pc.Index(index_name)
