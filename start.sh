@@ -2,7 +2,7 @@
 
 # Step 1: Create virtual environment if it doesn't exist
 if [ ! -d "venv_agent_lab" ]; then
-  python3.12 -m venv venv_agent_lab
+  python3.11 -m venv venv_agent_lab
 fi
 
 # Step 2: Use venv's pip to install requirements (no need to activate)
