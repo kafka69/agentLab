@@ -1,7 +1,7 @@
 services:
   - type: web
     name: agentlab-streamlit
-    env: python
+    runtime: python
     plan: free
     buildCommand: |
       pip install --only-binary :all: spacy thinc
