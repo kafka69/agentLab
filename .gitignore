@@ -10,7 +10,7 @@ hf*
 junk/data/*
 research_dir/*
 .DS_Store
-state_saves/*
+# state_saves/*
 __pycache__/*
 Figure*.png
 testrun.py
