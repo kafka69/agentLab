@@ -88,11 +88,19 @@ if st.session_state.config:
         key="research_topic_editor"
     )
     
+    st.sidebar.header("API Key Configuration")
+    api_key = st.sidebar.text_input(
+        "OpenAI API Key", 
+        type="password",
+        help="Enter your OpenAI API key here",
+        value=st.session_state.config.get('api-key', '') if st.session_state.config else ''
+    )
     # Save button
     if st.button("Save Configuration"):
         try:
             # Only update the research-topic in the config
             st.session_state.config['research-topic'] = edited_topic
+            st.session_state.config['api-key'] = api_key
             save_config(yaml_location, st.session_state.config)
             
             # Update the displayed content
