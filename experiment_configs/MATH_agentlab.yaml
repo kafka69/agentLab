@@ -2,7 +2,7 @@ api-key: test
 compile-latex: false
 copilot-mode: false
 except-if-fail: false
-gemini-api-key: AIzaSyAoDh4lxltPgOGzYiszXGa796ovNboqWac
+gemini-api-key: AIzaSyBHrba8Sof7JwXLpP02xq7NF3VzSr5ybTM
 groq-api-key: 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
 lab-index: 1
 language: English
@@ -10,10 +10,10 @@ lit-review-backend: gemini-2.5-flash
 llm-backend: gemini-2.5-flash
 load-existing: false
 mlesolver-max-steps: 1
-num-papers-lit-review: 5
+num-papers-lit-review: 1
 num-papers-to-write: 1
 openrouter-api-key: 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
-papersolver-max-steps: 5
+papersolver-max-steps: 3
 parallel-labs: false
 research-topic: Your goal is to write a comprehensive paper about Building CRM system
   implementation at Hasaki beauty and clinic
