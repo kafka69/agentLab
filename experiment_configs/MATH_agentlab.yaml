@@ -1,8 +1,8 @@
-api-key: test
+api-key: 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
 compile-latex: false
 copilot-mode: false
 except-if-fail: false
-gemini-api-key: AIzaSyBuBptx2fRQJjIgz9Aam9bs_g7AcruN8Fo
+gemini-api-key: AIzaSyAoDh4lxltPgOGzYiszXGa796ovNboqWac
 groq-api-key: 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
 lab-index: 1
 language: English

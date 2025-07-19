@@ -7,6 +7,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
 import shutil
+import tempfile
+
 
 # Constants
 DEFAULT_YAML = "experiment_configs/MATH_agentlab.yaml"
@@ -219,7 +221,17 @@ if st.session_state.config:
         
         st.subheader("Experimental Results")
         st.write(lab.phd.exp_results)
-        
+        with tempfile.NamedTemporaryFile(mode='w+', suffix='.txt', delete=False) as tmp:
+            tmp.write(lab.phd.report)  # Assuming you have a method to get report text
+            tmp_path = tmp.name
+
+        with open(tmp_path, 'rb') as f:
+            st.download_button(
+                label="Download Report",
+                data=f,
+                file_name="research_report.txt",
+                mime="text/plain"
+            )
         # Add download button for the report.txt file
         report_path = os.path.join(lab.lab_dir, "report.txt")
         if os.path.exists(report_path):

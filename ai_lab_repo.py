@@ -61,8 +61,8 @@ class LaboratoryWorkflow:
             ("literature review", ["literature review"]),
             ("plan formulation", ["plan formulation"]),
             # ("experimentation", ["data preparation", "running experiments"]),
-            ("experimentation", ["data preparation"]),
-            ("results interpretation", ["results interpretation", "report writing", "report refinement"]),
+            # ("experimentation", ["data preparation"]),
+            ("results interpretation", [ "report writing", "report refinement"]),
         ]
         self.phase_status = dict()
         for phase, subtasks in self.phases:
